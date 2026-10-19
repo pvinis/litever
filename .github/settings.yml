@@ -9,7 +9,7 @@
 repository:
   name: litever
   description: "Semantic Versioning without the extra number. MAJOR.MINOR: will this break me?"
-  homepage: https://pvinis.github.io/litever
+  homepage: https://litever.org
   topics: versioning, version, semver, calver, two-part-version, major-minor, library-versioning, specification
   private: false
   has_issues: true
