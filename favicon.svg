@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- MAJOR.MINOR: two colour-coded blocks with a round grey separator dot
+       sitting low on the baseline between them. -->
+  <rect x="5" y="6" width="9" height="20" rx="2" fill="#e64980" />
+  <rect x="18" y="6" width="9" height="20" rx="2" fill="#339af0" />
+  <circle cx="16" cy="24" r="1.6" fill="#8a8a92" />
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 300">
+  <!-- LiteVer mark: MAJOR.MINOR as two colour-coded blocks with a round grey
+       separator dot on the baseline. PaceVer's mark, one number lighter. -->
+  <rect x="92" y="75" width="64" height="150" rx="14" fill="#e64980" />
+  <rect x="194" y="75" width="64" height="150" rx="14" fill="#339af0" />
+  <circle cx="175" cy="212" r="13" fill="#8a8a92" />
+</svg>

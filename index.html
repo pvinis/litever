@@ -1,0 +1,421 @@
+<!doctype html>
+<!-- The spec text here mirrors README.md. Change both together. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LiteVer — Lite Versioning</title>
+    <meta
+      name="description"
+      content="Lite Versioning (LiteVer): Semantic Versioning without the extra number. MAJOR.MINOR, two numbers that answer one question: will this break me?"
+    />
+    <meta name="theme-color" content="#fcfbf8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0f13" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="LiteVer — Lite Versioning" />
+    <meta
+      property="og:description"
+      content="Two numbers. One question: will this break me? MAJOR.MINOR."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/iosevka@5/400.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/iosevka@5/700.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <a class="repo-link" href="https://github.com/pvinis/litever">GitHub ↗</a>
+      <h1>Lite Versioning</h1>
+      <p class="tagline">Two numbers. One question: <strong>will this break me?</strong></p>
+      <p class="format" aria-label="MAJOR dot MINOR">
+        <span class="major">MAJOR</span><span class="dot">.</span><span class="minor">MINOR</span>
+      </p>
+      <p class="lede">
+        LiteVer is Semantic Versioning without the extra number. It keeps the one promise people
+        actually rely on, <strong>MAJOR means breaking, anything else is safe</strong>, and drops the
+        distinction between a feature and a fix that almost nobody acts on.
+      </p>
+      <p class="lede">Lighter, not lesser. If you don't need the extra number, why carry it?</p>
+    </header>
+
+    <main>
+      <section id="summary">
+        <h2><a href="#summary">Summary</a></h2>
+        <p>A version number takes the form <code>MAJOR.MINOR</code>:</p>
+        <pre class="tree"><code>  2   .   7
+  │       │
+  │       └─ <span class="minor">MINOR</span>  bumped on every release that won't break you   (safe)
+  └───────── <span class="major">MAJOR</span>  bumped when a release will break you           (look first)</code></pre>
+        <ul>
+          <li>
+            <strong class="major">MAJOR</strong>: bump it when a release is
+            <strong>not backward compatible</strong>, so the people and software depending on you may
+            have to change something to take it. Resets MINOR to 0. <code>0</code> is reserved for
+            initial development; ship your first stable release as <code>1.0</code> and go from
+            there.
+          </li>
+          <li>
+            <strong class="minor">MINOR</strong>: bump it for <strong>every other release</strong>:
+            new features, bug fixes, performance work, deprecations, anything that keeps the
+            contract. Safe to take without looking.
+          </li>
+        </ul>
+        <p>
+          Where a tool insists on three numbers, write <code>2.7.0</code>. The trailing
+          <code>0</code> is padding: always <code>0</code>, never bumped.
+        </p>
+      </section>
+
+      <section id="introduction">
+        <h2><a href="#introduction">Introduction</a></h2>
+        <p>
+          Semantic Versioning asks three questions of every release: <em>did it break the contract,
+          did it add something, or did it only fix something?</em> The people who depend on you act on
+          the first answer and mostly ignore the other two.
+        </p>
+        <p>
+          Look at how SemVer versions are consumed. npm saves <code>^1.4.2</code> by default, which
+          takes every MINOR and PATCH release automatically. A Cargo requirement of
+          <code>"1.4"</code> does the same, and so does Ruby's <code>~&gt; 1.4</code>. The difference
+          between a feature and a fix is worked out carefully by the publisher, then thrown away by
+          almost every consumer.
+        </p>
+        <p>
+          It isn't free to work out, either. Every release starts with a small debate: is this a
+          feature or a fix? Does a bug fix that adds an option count as a feature? Commit conventions,
+          changelog tooling, and release bots exist largely to settle it.
+        </p>
+        <p>
+          LiteVer keeps the promise people rely on and drops the one they don't. A version is
+          <code>MAJOR.MINOR</code>: a MAJOR bump tells you to look before you upgrade; a MINOR bump
+          tells you that you don't have to.
+        </p>
+        <p>
+          LiteVer deliberately says nothing about the size of a change. A one-line fix and a big new
+          feature both bump MINOR by one, because neither breaks anything. A tiny removal bumps MAJOR,
+          because it does.
+        </p>
+      </section>
+
+      <section id="spec">
+        <h2><a href="#spec">LiteVer Specification</a></h2>
+        <p>
+          The key words "MUST", "MUST NOT", "SHOULD", "SHOULD NOT", and "MAY" are to be interpreted as
+          described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a>.
+        </p>
+        <ol class="spec-list">
+          <li id="spec-1">
+            A project using LiteVer MUST declare what it promises to the people and software that
+            depend on it: its public API, interface, or documented behaviour. This is
+            <strong>the contract</strong>. It SHOULD be precise and comprehensive, whether it lives in
+            code or in documentation.
+          </li>
+          <li id="spec-2">
+            A normal version number MUST take the form <code>X.Y</code>, where <code>X</code> (MAJOR)
+            and <code>Y</code> (MINOR) are non-negative integers and MUST NOT contain leading zeroes.
+            They are two separate integers, not a decimal: <code>1.10</code> comes after
+            <code>1.9</code>. Each successive release MUST increase in precedence, as defined in
+            <a href="#spec-7">rule 7</a>.
+          </li>
+          <li id="spec-3">
+            Once a version has been released, its contents MUST NOT change. Any change MUST be
+            released as a new version.
+          </li>
+          <li id="spec-4">
+            <strong class="major">MAJOR <code>0</code></strong> is for initial development. Anything
+            MAY change at any time, and the contract SHOULD NOT be considered stable. Every
+            <code>0.Y</code> release MAY be breaking.
+          </li>
+          <li id="spec-5">
+            <strong class="major">MAJOR</strong> (<code>X</code>) MUST be incremented when a release
+            makes any backward-incompatible change to the contract. It MAY also be incremented without
+            one, but consumers will treat every MAJOR bump as breaking. When MAJOR is incremented,
+            MINOR MUST be reset to <code>0</code>.
+          </li>
+          <li id="spec-6">
+            <strong class="minor">MINOR</strong> (<code>Y</code>) MUST be incremented for every
+            release that keeps the contract backward compatible: new features, bug fixes,
+            deprecations, performance work, internal changes, and anything else. LiteVer draws no
+            distinction between a feature and a fix.
+          </li>
+          <li id="spec-7">
+            <strong>Precedence</strong> is determined by comparing MAJOR, then MINOR, numerically
+            (<code>0.9 &lt; 1.0 &lt; 1.9 &lt; 1.10 &lt; 2.0</code>).
+          </li>
+          <li id="spec-8">
+            <strong>Padding.</strong> The canonical form has two components. Where a tool, registry,
+            or ecosystem requires three, a version MUST be written as <code>X.Y.0</code>. The third
+            component is padding: it MUST always be <code>0</code>, MUST NOT be incremented, and
+            carries no meaning. <code>X.Y</code> and <code>X.Y.0</code> denote the same version. A
+            project SHOULD use one written form per ecosystem, consistently.
+          </li>
+          <li id="spec-9">
+            Identifiers MAY be appended: a hyphen introduces pre-release identifiers (e.g.
+            <code>2.0-rc.1</code>, padded <code>2.0.0-rc.1</code>) and a plus sign introduces build
+            metadata (e.g. <code>2.0+20261019</code>). Their syntax and precedence follow SemVer
+            2.0.0: a pre-release version has lower precedence than its normal version, and build
+            metadata MUST be ignored when determining precedence.
+          </li>
+          <li id="spec-10">
+            <strong>One line per MAJOR.</strong> Within a MAJOR version, releases form a single
+            sequence. A fix for an older MAJOR line is released as the next MINOR on that line (with
+            <code>2.x</code> current and <code>1.9</code> the latest <code>1.x</code>, a backported
+            fix ships as <code>1.10</code>). Earlier MINOR versions within a line are not maintained
+            separately, because every later MINOR in the same line is a compatible upgrade.
+          </li>
+          <li id="spec-11">
+            <strong>Initial version and going stable.</strong> A project SHOULD begin at
+            <code>0.1</code>. Version <code>1.0</code> defines the first stable contract; a project
+            SHOULD release it once its contract is stable, or as soon as others depend on it in
+            production, whichever comes first.
+          </li>
+          <li id="spec-12">
+            <strong>Scope.</strong> LiteVer is for anything that offers a contract to others and whose
+            consumers need one answer from a version number: <em>can I take this without changing
+            anything?</em> That includes libraries, packages, APIs, command-line tools, plugins, file
+            formats, and specifications.
+          </li>
+        </ol>
+      </section>
+
+      <section id="why">
+        <h2><a href="#why">Why use LiteVer</a></h2>
+        <ul>
+          <li>
+            <strong>One question, one number.</strong> <code>2.7 → 2.8</code> is safe to take.
+            <code>2.8 → 3.0</code> means read the notes first. The version answers the only question a
+            consumer acts on.
+          </li>
+          <li>
+            <strong>It ends the feature-or-fix argument.</strong> No more debating whether a fix that
+            adds an option "deserves" a MINOR or a PATCH. If it doesn't break anything, it's MINOR.
+          </li>
+          <li>
+            <strong>It speaks your tools' language.</strong> Padded to <code>X.Y.0</code>, a LiteVer
+            version is a valid SemVer string. Caret ranges, Cargo requirements, Ruby's
+            <code>~&gt;</code>, and sort orders all work unchanged. Your consumers don't need to know
+            you use LiteVer.
+          </li>
+          <li>
+            <strong>It's how people already talk.</strong> Nobody says "we're on two point seven point
+            three". They say "we're on 2.7". LiteVer just makes that the whole version.
+          </li>
+          <li>
+            <strong>Easy in, easy out.</strong> Moving from SemVer needs no renumbering, and moving
+            back is just as easy (see the <a href="#faq">FAQ</a>).
+          </li>
+        </ul>
+      </section>
+
+      <section id="when-not">
+        <h2><a href="#when-not">When NOT to use LiteVer</a></h2>
+        <p>LiteVer trades away SemVer's feature/fix distinction on purpose. It is the wrong tool when:</p>
+        <ul>
+          <li>
+            <strong>Your consumers rely on patch-only updates.</strong> If downstream users (long-term
+            support distributions, regulated environments, slow-moving enterprise deployments) need to
+            take fixes without taking features, they need SemVer's PATCH line (<code>~1.4.2</code>).
+            LiteVer gives that up.
+          </li>
+          <li>
+            <strong>You maintain several MINOR lines at once.</strong> If you support
+            <code>2.3</code> and <code>2.4</code> side by side with separate fixes, you need a third
+            number to tell them apart.
+          </li>
+          <li>
+            <strong>Your app ships through a native and an over-the-air channel.</strong> For a React
+            Native or Expo app, the useful question is how a release reaches users, not whether a
+            contract broke. Use <a href="https://github.com/pvinis/pacever">PaceVer</a>.
+          </li>
+          <li>
+            <strong>Your audience keys off recency.</strong> If readers of your version number mostly
+            want "how recent", use <a href="https://calver.org">CalVer</a>.
+          </li>
+        </ul>
+        <p>
+          Adopting LiteVer means giving up patch-only update ranges in exchange for a simpler number
+          and a simpler release process. Make that trade on purpose.
+        </p>
+      </section>
+
+      <section id="example">
+        <h2><a href="#example">Example: one library's version history</a></h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Version</th>
+              <th>Change</th>
+              <th>What shipped</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>0.1</code></td><td>start</td><td>First release. Initial development begins.</td></tr>
+            <tr><td><code>0.2</code></td><td><span class="minor">MINOR</span></td><td>Renamed the main function. In <code>0.x</code>, anything may change.</td></tr>
+            <tr><td><code>1.0</code></td><td><span class="major">MAJOR</span></td><td>The contract is declared stable.</td></tr>
+            <tr><td><code>1.1</code></td><td><span class="minor">MINOR</span></td><td>Fixed a crash on empty input.</td></tr>
+            <tr><td><code>1.2</code></td><td><span class="minor">MINOR</span></td><td>Added a <code>timeout</code> option.</td></tr>
+            <tr><td><code>1.3</code></td><td><span class="minor">MINOR</span></td><td>Deprecated <code>connect()</code> in favour of <code>open()</code>.</td></tr>
+            <tr><td><code>2.0</code></td><td><span class="major">MAJOR</span></td><td>Removed <code>connect()</code>. MINOR resets.</td></tr>
+            <tr><td><code>1.4</code></td><td><span class="minor">MINOR</span></td><td>A security fix, backported to the <code>1.x</code> line for users not yet on <code>2.0</code>.</td></tr>
+            <tr><td><code>2.1</code></td><td><span class="minor">MINOR</span></td><td>The same security fix on the current line.</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Every row answers <em>"can I take this without looking?"</em> from the number alone: a MINOR
+          change means yes; a MAJOR change means read the notes first.
+        </p>
+      </section>
+
+      <section id="ecosystems">
+        <h2><a href="#ecosystems">Writing LiteVer in your ecosystem</a></h2>
+        <table class="ecosystems">
+          <thead>
+            <tr>
+              <th>Ecosystem</th>
+              <th>Write it as</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>npm</td><td><code>2.7.0</code></td><td>npm requires three parts, so pad. Dependents' <code>^2.7.0</code> takes every compatible release.</td></tr>
+            <tr><td>Cargo (Rust)</td><td><code>2.7.0</code></td><td>Pad the <code>version</code> field. Dependents can already write <code>"2.7"</code>, meaning <code>&gt;=2.7, &lt;3.0</code>.</td></tr>
+            <tr><td>Go modules</td><td><code>v2.7.0</code></td><td>Go requires three parts and a <code>v</code>. MAJOR 2 and up goes in the module path, as usual.</td></tr>
+            <tr><td>PyPI (PEP 440)</td><td><code>2.7</code></td><td>Two parts are native. Dependents' <code>~=2.7</code> means <code>&gt;=2.7, ==2.*</code>.</td></tr>
+            <tr><td>RubyGems</td><td><code>2.7</code></td><td>Two parts are native. Dependents' <code>~&gt; 2.7</code> means <code>&gt;= 2.7, &lt; 3.0</code>: exactly LiteVer's promise.</td></tr>
+            <tr><td>Git tags</td><td><code>v2.7</code></td><td>Or <code>v2.7.0</code> if your release tooling expects three parts.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="faq">
+        <h2><a href="#faq">FAQ</a></h2>
+        <div class="faq">
+          <h3>Where did PATCH go?</h3>
+          <p>
+            Into MINOR. A bug fix is a backward-compatible change, so it bumps MINOR like any other.
+            LiteVer doesn't ask whether a release fixed something or added something, only whether it
+            breaks anything.
+          </p>
+
+          <h3>Isn't <code>1.10</code> lower than <code>1.9</code>?</h3>
+          <p>
+            No. Versions aren't decimals: each component is its own integer, so <code>1.10</code>
+            comes after <code>1.9</code> (<a href="#spec-7">rule 7</a>). Watch out for config formats
+            that <em>do</em> read them as decimals. Unquoted, <code>version: 1.10</code> in YAML or
+            <code>version = 1.10</code> in TOML is the number <code>1.1</code>. Always write the
+            version as a string: <code>version: "1.10"</code>.
+          </p>
+
+          <h3>My tool requires three numbers.</h3>
+          <p>
+            Pad it: <code>2.7</code> becomes <code>2.7.0</code> (<a href="#spec-8">rule 8</a>). The
+            trailing <code>0</code> never changes.
+          </p>
+
+          <h3>Is a padded LiteVer version valid SemVer?</h3>
+          <p>
+            In form, yes: <code>X.Y.0</code> is a valid SemVer string and sorts correctly. In meaning,
+            almost. SemVer asks for a PATCH bump on fix-only releases, while LiteVer folds those into
+            MINOR. The part that tools and people rely on is identical (MAJOR means breaking, anything
+            else is safe), so nobody reading your version as SemVer gets a wrong answer about
+            compatibility. At worst they think a bug fix added a feature.
+          </p>
+
+          <h3>How do I ship a hotfix for an older version?</h3>
+          <p>
+            As the next MINOR on that MAJOR line (<a href="#spec-10">rule 10</a>). With
+            <code>2.x</code> current and <code>1.9</code> the last <code>1.x</code> release, the fix
+            goes out as <code>1.10</code>, and as the next <code>2.x</code> too. You never need to fix
+            <code>2.4</code> separately from <code>2.5</code>: <code>2.5</code> is a compatible upgrade
+            from <code>2.4</code>, so the fix ships as <code>2.6</code> and everyone on
+            <code>2.x</code> can take it.
+          </p>
+
+          <h3>What about users who want fixes but not features?</h3>
+          <p>
+            LiteVer doesn't serve them, on purpose (see
+            <a href="#when-not">When NOT to use LiteVer</a>). If that audience matters to you, SemVer's
+            PATCH number exists exactly for them.
+          </p>
+
+          <h3>Can I bump MAJOR for a big release that doesn't break anything?</h3>
+          <p>
+            You may (<a href="#spec-5">rule 5</a>), but every MAJOR bump makes your consumers stop and
+            check. Save MAJOR for breaks, and celebrate big compatible releases in your release notes,
+            not in the number.
+          </p>
+
+          <h3>What counts as a breaking change?</h3>
+          <p>
+            Anything that, under the contract you declared (<a href="#spec-1">rule 1</a>), could make a
+            consumer change something to take the release: removing or renaming public API, changing
+            documented behaviour, tightening what input you accept. When in doubt, it's MAJOR. A
+            cautious MAJOR costs a consumer a look; a wrong MINOR costs them a broken build.
+          </p>
+
+          <h3>How should I handle deprecations?</h3>
+          <p>
+            Deprecate in a MINOR release, remove in the next MAJOR. Marking something deprecated breaks
+            nothing; removing it does.
+          </p>
+
+          <h3>In SemVer's <code>0.x</code> I use MINOR for breaks and PATCH for fixes. Can I do that here?</h3>
+          <p>
+            No. That's three numbers doing two numbers' job. In LiteVer's <code>0.x</code> anything may
+            break (<a href="#spec-4">rule 4</a>), and tools agree: npm and Cargo already treat each
+            padded <code>0.Y.0</code> as its own breaking line. If people depend on your project, it's
+            time for <code>1.0</code>. MAJOR numbers are free.
+          </p>
+
+          <h3>I already use SemVer. How do I migrate?</h3>
+          <p>
+            Drop PATCH from your next release. At <code>3.4.2</code>, your next compatible release is
+            <code>3.5</code> (or <code>3.5.0</code> padded) and your next breaking release is
+            <code>4.0</code>. There's no renumbering, and precedence holds because <code>3.5</code>
+            comes after <code>3.4.2</code>. Going back is just as easy: <code>3.5</code> is
+            <code>3.5.0</code>, and you start bumping PATCH again.
+          </p>
+
+          <h3>Is LiteVer versioned with LiteVer?</h3>
+          <p>
+            Yes. A spec is a contract that other people rely on, which is exactly what LiteVer is for.
+            Its sibling PaceVer can't say the same: PaceVer is for apps, so it versions itself with
+            SemVer.
+          </p>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2><a href="#about">About</a></h2>
+        <p>
+          LiteVer was created in 2026 by <a href="https://github.com/pvinis">Pavlos Vinieratos</a>. It
+          is a sibling of <a href="https://github.com/pvinis/pacever">PaceVer</a>, which versions apps
+          by the pace each release travels at.
+        </p>
+        <p>This specification is versioned with <strong>LiteVer</strong> itself.</p>
+        <p class="version">Current version: <strong>1.0</strong> (LiteVer).</p>
+      </section>
+
+      <section id="license">
+        <h2><a href="#license">License</a></h2>
+        <p>
+          LiteVer, the Lite Versioning specification, is licensed under a
+          <a href="https://creativecommons.org/licenses/by/4.0/"
+            >Creative Commons Attribution 4.0 International License (CC BY 4.0)</a
+          >. You are free to share and adapt it, including commercially, as long as you give
+          appropriate credit.
+        </p>
+        <p>Copyright © 2026 <a href="https://github.com/pvinis">Pavlos Vinieratos</a>.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        <span class="major">LiteVer</span> · spec <strong>1.0</strong> (LiteVer) ·
+        <a href="https://github.com/pvinis/litever">source on GitHub</a> ·
+        <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+      </p>
+    </footer>
+  </body>
+</html>
