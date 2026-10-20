@@ -149,7 +149,7 @@ when:
   side with separate fixes, you need a third number to tell them apart.
 - **Your app ships through a native and an over-the-air channel.** For a React
   Native or Expo app, the useful question is how a release reaches users, not whether
-  a contract broke. Use [PaceVer](https://github.com/pvinis/pacever).
+  a contract broke. Use [PaceVer](https://pacever.org).
 - **Your audience keys off recency.** If readers of your version number mostly want
   "how recent", use [CalVer](https://calver.org).
 
@@ -260,8 +260,8 @@ with SemVer.
 ## About
 
 LiteVer was created in 2026 by [Pavlos Vinieratos](https://github.com/pvinis). It is a
-sibling of [PaceVer](https://github.com/pvinis/pacever), which versions apps by the
-pace each release travels at.
+sibling of [PaceVer](https://pacever.org), which versions apps by the pace each
+release travels at. The spec is published at [litever.org](https://litever.org).
 
 This specification is versioned with **LiteVer** itself.
 
